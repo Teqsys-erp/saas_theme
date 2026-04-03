@@ -1,12 +1,17 @@
 /*
- * SaaS Theme - Sidebar Overrides
- * Enhances frappe sidebar with SaaS-style user menu and interactions
+ * SaaS Theme - Dual Sidebar + User Menu
+ *
+ * Architecture:
+ *   [Workspace Rail 56px] [Sidebar Panel ~220px] [Main Content]
+ *
+ * The rail shows workspace icons from frappe.boot.desktop_icons.
+ * Clicking an icon switches the sidebar panel to that workspace.
+ * Rail only shows when the sidebar panel is also visible.
  */
 
 $(document).ready(function () {
 	if (!frappe.boot.setup_complete) return;
 
-	// Wait for sidebar to be ready
 	frappe.after_ajax(function () {
 		saas_theme.sidebar.init();
 	});
@@ -15,27 +20,188 @@ $(document).ready(function () {
 frappe.provide("saas_theme.sidebar");
 
 saas_theme.sidebar = {
+	rail_built: false,
+
 	init() {
+		this.build_workspace_rail();
 		this.setup_user_menu();
-		this.enhance_sidebar_items();
+		this.listen_for_changes();
+		this.toggle_rail_visibility();
 	},
+
+	/* ============================================
+	   WORKSPACE RAIL
+	   ============================================ */
+
+	build_workspace_rail() {
+		if (this.rail_built) return;
+
+		const workspaces = this.get_workspaces();
+		if (!workspaces.length) return;
+
+		let icons_html = "";
+		workspaces.forEach((ws) => {
+			const icon_content = this.get_icon_for_workspace(ws);
+			const escaped_label = frappe.utils.escape_html(ws.label);
+			icons_html += `
+				<div class="st-rail-item"
+					data-workspace="${escaped_label}">
+					<div class="st-rail-icon">
+						${icon_content}
+					</div>
+					<span class="st-rail-tooltip">${escaped_label}</span>
+				</div>`;
+		});
+
+		this.$rail = $(`
+			<div class="st-workspace-rail">
+				<div class="st-rail-top">
+					${icons_html}
+				</div>
+			</div>
+		`);
+
+		$(".body-sidebar-container").before(this.$rail);
+
+		// Click handler
+		this.$rail.find(".st-rail-item").on("click", function () {
+			const ws_name = $(this).data("workspace");
+			saas_theme.sidebar.switch_workspace(ws_name);
+		});
+
+		// Tooltips — move to body and position with JS
+		this.$rail.find(".st-rail-tooltip").each(function () {
+			$(this).appendTo("body");
+		});
+
+		this.$rail.find(".st-rail-item").on("mouseenter", function () {
+			const label = $(this).data("workspace");
+			const $tip = $('body > .st-rail-tooltip').filter(function () {
+				return $(this).text().trim() === label;
+			});
+			if (!$tip.length) return;
+
+			const rect = this.getBoundingClientRect();
+			$tip.css({
+				top: rect.top + rect.height / 2 - $tip.outerHeight() / 2,
+				left: rect.right + 10,
+			}).addClass("visible");
+		}).on("mouseleave", function () {
+			$("body > .st-rail-tooltip").removeClass("visible");
+		});
+
+		this.rail_built = true;
+		this.update_rail_active();
+	},
+
+	get_workspaces() {
+		const icons = frappe.boot.desktop_icons || [];
+		const sidebar_items = frappe.boot.workspace_sidebar_item || {};
+
+		return icons.filter((icon) => {
+			return (
+				icon.hidden !== 1 &&
+				icon.link_type === "Workspace Sidebar" &&
+				sidebar_items[icon.label.toLowerCase()]
+			);
+		});
+	},
+
+	get_icon_for_workspace(ws) {
+		// Use header_icon from workspace sidebar data — these are espresso
+		// stroke-based icons that respect CSS color (ideal for dark rail)
+		const sidebar_data = frappe.boot.workspace_sidebar_item[ws.label.toLowerCase()];
+		if (sidebar_data && sidebar_data.header_icon) {
+			return frappe.utils.icon(sidebar_data.header_icon, "md", "", "", "", true);
+		}
+
+		// Fallback: first letter
+		const letter = ws.label.charAt(0).toUpperCase();
+		return `<span class="st-rail-initials">${letter}</span>`;
+	},
+
+	switch_workspace(workspace_name) {
+		if (!workspace_name) return;
+		frappe.app.sidebar.setup(workspace_name);
+		this.update_rail_active();
+	},
+
+	update_rail_active() {
+		const current = (frappe.app.sidebar.sidebar_title || "").toLowerCase();
+
+		$(".st-rail-item").removeClass("active");
+		$(".st-rail-item").each(function () {
+			const ws = $(this).data("workspace");
+			if (ws && ws.toLowerCase() === current) {
+				$(this).addClass("active");
+			}
+		});
+	},
+
+	/*
+	 * Show rail ONLY when frappe's sidebar is visible.
+	 * Frappe hides sidebar on pages like /desk (module picker).
+	 * We mirror that: rail visible = sidebar visible.
+	 */
+	toggle_rail_visibility() {
+		if (!this.$rail) return;
+
+		const sidebar_visible = $(".body-sidebar-container").is(":visible");
+		const page = frappe.container?.page?.page;
+		const hide = page?.hide_sidebar;
+
+		if (sidebar_visible && !hide) {
+			this.$rail.show();
+			$("body").addClass("st-dual-sidebar");
+		} else {
+			this.$rail.hide();
+			$("body").removeClass("st-dual-sidebar");
+		}
+	},
+
+	listen_for_changes() {
+		const me = this;
+
+		$(document).on("sidebar_setup", () => {
+			setTimeout(() => {
+				me.update_rail_active();
+				me.toggle_rail_visibility();
+			}, 50);
+		});
+
+		$(document).on("page-change", () => {
+			setTimeout(() => {
+				me.update_rail_active();
+				me.toggle_rail_visibility();
+			}, 100);
+		});
+
+		$(document).on("form-refresh", () => {
+			setTimeout(() => {
+				me.toggle_rail_visibility();
+			}, 100);
+		});
+	},
+
+	/* ============================================
+	   USER MENU
+	   ============================================ */
 
 	setup_user_menu() {
 		const $sidebar = $(".body-sidebar");
-		const $user_btn = $sidebar.find(".dropdown-navbar-user .sidebar-user-button");
+		const $user_btn = $sidebar.find(
+			".dropdown-navbar-user .sidebar-user-button"
+		);
 
-		// Remove default onclick and add our custom menu
 		$user_btn.removeAttr("onclick");
 		$user_btn.off("click");
 
-		// Create popover menu
 		$user_btn.on("click", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 			this.toggle_user_menu();
 		});
 
-		// Close menu on outside click
 		$(document).on("click.saas_user_menu", (e) => {
 			if (
 				!$(e.target).closest(".saas-user-menu").length &&
@@ -47,9 +213,8 @@ saas_theme.sidebar = {
 	},
 
 	toggle_user_menu() {
-		let $menu = $(".saas-user-menu");
-		if ($menu.length) {
-			$menu.remove();
+		if ($(".saas-user-menu").length) {
+			$(".saas-user-menu").remove();
 			return;
 		}
 		this.show_user_menu();
@@ -67,9 +232,16 @@ saas_theme.sidebar = {
 			? `v${frappe.boot.versions.frappe}`
 			: "";
 
-		const menu_items = this.get_user_menu_items();
-		let items_html = "";
+		const menu_items = [
+			{ label: __("Integrations"), icon: "folder", href: "/app/installed-applications" },
+			{ label: __("History"), icon: "clock", href: "/app/activity-log" },
+			{ label: __("Upgrade to Pro"), star: true, action: "upgrade" },
+			{ highlight: true, label: __("Update App"), action: "update" },
+			{ divider: true },
+			{ label: __("Logout"), icon: "logout", action: "logout" },
+		];
 
+		let items_html = "";
 		menu_items.forEach((item) => {
 			if (item.divider) {
 				items_html += '<div class="saas-user-menu-divider"></div>';
@@ -103,18 +275,13 @@ saas_theme.sidebar = {
 					</div>
 				</div>
 				<div class="saas-user-menu-divider"></div>
-				<div class="saas-user-menu-items">
-					${items_html}
-				</div>
+				<div class="saas-user-menu-items">${items_html}</div>
 				${version ? `<div class="saas-user-menu-footer">${version} &middot; Terms &amp; Conditions</div>` : ""}
 			</div>
 		`);
 
-		// Position the menu above the user profile
-		const $sidebar = $(".body-sidebar");
-		$sidebar.append($menu);
+		$(".body-sidebar").append($menu);
 
-		// Handle menu item clicks
 		$menu.find(".saas-user-menu-item").on("click", function (e) {
 			const action = $(this).data("action");
 			if (action) {
@@ -123,39 +290,6 @@ saas_theme.sidebar = {
 				saas_theme.sidebar.close_user_menu();
 			}
 		});
-	},
-
-	get_user_menu_items() {
-		return [
-			{
-				label: __("Integrations"),
-				icon: "folder",
-				href: "/app/installed-applications",
-				action: "",
-			},
-			{
-				label: __("History"),
-				icon: "clock",
-				href: "/app/activity-log",
-				action: "",
-			},
-			{
-				label: __("Upgrade to Pro"),
-				star: true,
-				action: "upgrade",
-			},
-			{
-				highlight: true,
-				label: __("Update App"),
-				action: "update",
-			},
-			{ divider: true },
-			{
-				label: __("Logout"),
-				icon: "logout",
-				action: "logout",
-			},
-		];
 	},
 
 	handle_menu_action(action) {
@@ -170,23 +304,5 @@ saas_theme.sidebar = {
 				frappe.msgprint(__("App is up to date."));
 				break;
 		}
-	},
-
-	enhance_sidebar_items() {
-		// Add notification dot to Activity item if it exists
-		setTimeout(() => {
-			const $activity_item = $(
-				'.sidebar-item-container[item-name="Activity"] .sidebar-item-icon, ' +
-				'.sidebar-item-container[title="Activity"] .sidebar-item-icon'
-			);
-			if (
-				$activity_item.length &&
-				!$activity_item.find(".st-notification-dot").length
-			) {
-				$activity_item
-					.css("position", "relative")
-					.append('<span class="st-notification-dot"></span>');
-			}
-		}, 1000);
 	},
 };
