@@ -1821,7 +1821,8 @@ body.st-dual-sidebar .main-section {
 	position: sticky;
 	top: 0;
 	z-index: 1021;
-	overflow: visible;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 [data-theme="dark"] .st-workspace-rail {
@@ -2015,6 +2016,11 @@ body.st-dual-sidebar .overlay {
 	display: none !important;
 }
 
+/* ===== Onboarding panel — shift right for workspace rail ===== */
+body.st-dual-sidebar .onb-panel {
+	left: calc(60px + 236px) !important;
+}
+
 /* ============================================
    25. DESK PAGE (/desk) — Module Picker
    ============================================ */
@@ -2099,29 +2105,33 @@ body.st-dual-sidebar .overlay {
 .desktop-wrapper .desktop-container {
 	min-height: calc(100vh - 56px);
 	background: var(--bg-color);
-	padding: 0 24px;
+	padding: 40px 24px 24px;
+	justify-content: center;
 }
 
 /* Icons container */
 .desktop-wrapper .icons-container {
-	margin-top: 80px;
+	margin-top: 0;
 	padding: 0;
-	max-width: 900px;
+	width: 100%;
+	max-width: 1000px;
 }
 
-/* Grid */
+/* Grid — 6 columns on desktop */
 .desktop-wrapper .icons {
-	gap: 20px;
-	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-	grid-template-rows: auto;
+	gap: 12px 8px;
+	grid-template-columns: repeat(6, 1fr) !important;
+	grid-template-rows: auto !important;
+	justify-items: center;
 }
 
 /* Individual icon */
 .desktop-wrapper .desktop-icon {
-	width: 120px;
+	width: 100%;
+	max-width: 140px;
 	height: auto;
-	padding: 20px 12px 16px;
-	border-radius: 12px;
+	padding: 18px 10px 14px;
+	border-radius: 10px;
 	border: 1px solid transparent;
 	gap: 10px;
 	transition: all 0.2s ease;
@@ -2129,8 +2139,8 @@ body.st-dual-sidebar .overlay {
 }
 
 .desktop-wrapper .desktop-icon:hover {
-	background: #FFFFFF;
-	border-color: #E3E8EE;
+	background: var(--fg-color);
+	border-color: var(--gray-200);
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 	transform: translateY(-2px);
 }
@@ -2140,7 +2150,7 @@ body.st-dual-sidebar .overlay {
 	border-color: #30363D;
 }
 
-/* Icon container (the circle/square with icon) */
+/* Icon container (the rounded square with icon) */
 .desktop-wrapper .icon-container {
 	width: 52px;
 	height: 52px;
@@ -2153,7 +2163,7 @@ body.st-dual-sidebar .overlay {
 }
 
 .desktop-wrapper .icon-container:has(.icon) {
-	background: #EFF3F8;
+	background: var(--gray-100);
 }
 
 [data-theme="dark"] .desktop-wrapper .icon-container:has(.icon) {
@@ -2182,10 +2192,13 @@ body.st-dual-sidebar .overlay {
 }
 
 .desktop-wrapper .icon-title {
-	font-size: 13px;
+	font-size: 12.5px;
 	font-weight: 550;
 	color: var(--text-color);
 	line-height: 1.3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .desktop-wrapper .icon-subtitle {
@@ -2198,7 +2211,7 @@ body.st-dual-sidebar .overlay {
 .desktop-wrapper .folder-icon {
 	border-radius: 14px;
 	padding: 6px;
-	background: #EFF3F8 !important;
+	background: var(--gray-100) !important;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
@@ -2218,7 +2231,7 @@ body.st-dual-sidebar .overlay {
 
 /* ===== Edit mode ===== */
 .desktop-wrapper .desktop-edit-mode {
-	border-color: #D3D9E0;
+	border-color: var(--gray-300);
 }
 
 .desktop-wrapper .edit-mode-buttons .btn {
@@ -2227,35 +2240,45 @@ body.st-dual-sidebar .overlay {
 
 /* ===== Page indicator ===== */
 .desktop-wrapper .page-indicator {
-	background: #D3D9E0;
+	background: var(--gray-300);
 	width: 6px;
 	height: 6px;
 }
 
 .desktop-wrapper .active-page {
-	background: #0052FF !important;
+	background: var(--primary) !important;
 }
 
-/* ===== Welcome text (if only one app) ===== */
+/* ===== Welcome text ===== */
 .desktop-wrapper .no-apps-message {
 	color: var(--text-muted);
 	font-size: var(--text-lg);
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 576px) {
-	.desktop-wrapper .icons-container {
-		margin-top: 40px;
-	}
-
+@media (max-width: 768px) {
 	.desktop-wrapper .icons {
-		grid-template-columns: repeat(3, 1fr);
-		gap: 12px;
+		grid-template-columns: repeat(4, 1fr) !important;
+		gap: 10px 6px;
 	}
 
 	.desktop-wrapper .desktop-icon {
-		width: auto;
-		padding: 16px 8px 12px;
+		max-width: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.desktop-wrapper .icons {
+		grid-template-columns: repeat(3, 1fr) !important;
+		gap: 8px 4px;
+	}
+
+	.desktop-wrapper .desktop-icon {
+		padding: 14px 6px 10px;
+	}
+
+	.desktop-wrapper .icons-container {
+		margin-top: 0;
 	}
 }
 
@@ -2466,6 +2489,7 @@ body.st-dual-sidebar .overlay {
 .form-links .form-documents {
 	column-count: 3 !important;
 	column-gap: 16px !important;
+	margin-top: 12px !important;
 }
 
 .form-links .form-documents .row {

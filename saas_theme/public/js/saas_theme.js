@@ -16,6 +16,14 @@ $(document).ready(function () {
 		saas_theme.sidebar.init();
 		saas_theme.attachments.init();
 	});
+
+	// Re-init on sidebar_setup in case frappe.after_ajax fired too early
+	$(document).on("sidebar_setup", function () {
+		if (!saas_theme.sidebar.rail_built) {
+			saas_theme.sidebar.init();
+		}
+		saas_theme.sidebar.setup_user_menu();
+	});
 });
 
 frappe.provide("saas_theme.sidebar");
@@ -27,7 +35,10 @@ saas_theme.sidebar = {
 	init() {
 		this.build_workspace_rail();
 		this.setup_user_menu();
-		this.listen_for_changes();
+		if (!this._listeners_bound) {
+			this.listen_for_changes();
+			this._listeners_bound = true;
+		}
 		this.toggle_rail_visibility();
 	},
 
@@ -153,6 +164,34 @@ saas_theme.sidebar = {
 		}
 	},
 
+	ensure_sidebar_content() {
+		// If sidebar panel is visible but has no items, force a re-setup
+		const $top = $(".body-sidebar .body-sidebar-top");
+		if (!$top.length) return;
+
+		const has_items = $top.find(".standard-sidebar-item").length > 0;
+		if (has_items) return;
+
+		// Try to find the right workspace for the current route
+		const route = frappe.get_route();
+		if (!route || !route.length) return;
+
+		const entity = route.length >= 2 ? route[1] : route[0];
+		if (!entity || !frappe.app.sidebar) return;
+
+		// Check if entity maps to a workspace
+		const sidebars = frappe.app.sidebar.get_workspace_sidebars
+			? frappe.app.sidebar.get_workspace_sidebars(entity)
+			: [];
+
+		if (sidebars.length) {
+			frappe.app.sidebar.setup(sidebars[0]);
+		} else if (frappe.app.sidebar.sidebar_title) {
+			// Re-setup current sidebar to force re-render
+			frappe.app.sidebar.setup(frappe.app.sidebar.sidebar_title);
+		}
+	},
+
 	listen_for_changes() {
 		const me = this;
 
@@ -167,13 +206,15 @@ saas_theme.sidebar = {
 			setTimeout(() => {
 				me.update_rail_active();
 				me.toggle_rail_visibility();
+				me.ensure_sidebar_content();
 			}, 100);
 		});
 
 		$(document).on("form-refresh", () => {
 			setTimeout(() => {
 				me.toggle_rail_visibility();
-			}, 100);
+				me.ensure_sidebar_content();
+			}, 200);
 		});
 	},
 
@@ -187,6 +228,8 @@ saas_theme.sidebar = {
 			".dropdown-navbar-user .sidebar-user-button"
 		);
 
+		if (!$user_btn.length) return;
+
 		$user_btn.removeAttr("onclick");
 		$user_btn.off("click");
 
@@ -196,14 +239,17 @@ saas_theme.sidebar = {
 			this.toggle_user_menu();
 		});
 
-		$(document).on("click.saas_user_menu", (e) => {
-			if (
-				!$(e.target).closest(".saas-user-menu").length &&
-				!$(e.target).closest(".dropdown-navbar-user").length
-			) {
-				this.close_user_menu();
-			}
-		});
+		if (!this._user_menu_doc_bound) {
+			$(document).on("click.saas_user_menu", (e) => {
+				if (
+					!$(e.target).closest(".saas-user-menu").length &&
+					!$(e.target).closest(".dropdown-navbar-user").length
+				) {
+					this.close_user_menu();
+				}
+			});
+			this._user_menu_doc_bound = true;
+		}
 	},
 
 	toggle_user_menu() {
