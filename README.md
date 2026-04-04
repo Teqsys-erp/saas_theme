@@ -42,6 +42,12 @@
 - Uppercase section headers with subtle background
 - Clean list rows with primary-colored count badges
 
+### Login Page
+- Two-column split layout with form on left and branded gradient panel on right
+- Polished inputs, buttons, and social login styling
+- Mobile responsive — panel hidden on small screens
+- Dark mode support
+
 ### Desk Homepage
 - Proper 6-column grid layout for workspace icons
 - Hover effects with lift animation
@@ -74,6 +80,10 @@
 ### Slide-in Child Table Editor
 ![Child Table Editor](saas_theme/screenshots/child_table_edit.png)
 *Right-side sheet for editing child table rows with all actions visible*
+
+### Login Page
+![Login](saas_theme/screenshots/login.png)
+*Two-column split login with branded gradient panel*
 
 ### Reports
 ![General Ledger](saas_theme/screenshots/report_general_ledger.png)
