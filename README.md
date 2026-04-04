@@ -49,7 +49,32 @@ A modern, polished SaaS UI theme for **Frappe Framework v16** that transforms th
 
 ## Screenshots
 
-> Coming soon
+### Workspace Home & Sidebar
+![Workspace Home](saas_theme/screenshots/home_buying.png)
+*Dual sidebar with dark workspace rail, module icons, and Buying workspace*
+
+### Dashboard
+![Dashboard](saas_theme/screenshots/dashboard.png)
+*Polished dashboard with number cards, charts in primary blue, and squarish widget cards*
+
+### List View
+![List View](saas_theme/screenshots/list_view_purchase_invoice.png)
+*Clean list view with status indicators and styled filters*
+
+### Connections Tab & Form Sidebar
+![Connections Tab](saas_theme/screenshots/connections_tab_with_right_sidebar.png)
+*Grouped connection cards with masonry layout and redesigned right sidebar*
+
+### Slide-in Child Table Editor
+![Child Table Editor](saas_theme/screenshots/child_table_edit.png)
+*Right-side sheet for editing child table rows with all actions visible*
+
+### Reports
+![General Ledger](saas_theme/screenshots/report_general_ledger.png)
+*General Ledger report view*
+
+![Trial Balance](saas_theme/screenshots/report_trial_balance.png)
+*Trial Balance report with expandable tree view*
 
 ---
 
