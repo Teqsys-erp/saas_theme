@@ -2624,3 +2624,156 @@ body.st-dual-sidebar .overlay {
 	background: rgba(230, 81, 0, 0.15) !important;
 	color: #ff9800 !important;
 }
+
+/* ============================================
+   9. CHILD TABLE ROW — Right Sheet (Slide-in)
+   ============================================ */
+
+/* --- Override the centered modal to a right-side sheet --- */
+.grid-row-open .form-in-grid {
+	top: 0 !important;
+	right: 0 !important;
+	left: auto !important;
+	bottom: 0 !important;
+	transform: translateX(0) !important;
+	width: 50% !important;
+	max-width: 720px !important;
+	height: 100vh !important;
+	border-radius: 0 !important;
+	border-left: 1px solid var(--gray-200) !important;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08) !important;
+	padding: 0 !important;
+	display: flex !important;
+	flex-direction: column !important;
+	animation: st-slide-in-right 0.25s ease-out !important;
+}
+
+@keyframes st-slide-in-right {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+/* --- Scrollable body --- */
+.grid-row-open .form-in-grid .grid-form-body {
+	max-height: none !important;
+	overflow-y: auto !important;
+	flex: 1 !important;
+	padding: var(--padding-md) !important;
+}
+
+/* --- Header toolbar --- */
+.grid-row-open .form-in-grid .grid-form-heading {
+	padding: 12px 16px !important;
+	border-bottom: 1px solid var(--gray-200) !important;
+	background: rgba(0, 0, 0, 0.015) !important;
+	flex-shrink: 0 !important;
+}
+
+/* --- Footer toolbar --- */
+.grid-row-open .form-in-grid .grid-footer-toolbar {
+	padding: 10px 16px !important;
+	border-top: 1px solid var(--gray-200) !important;
+	background: rgba(0, 0, 0, 0.015) !important;
+	flex-shrink: 0 !important;
+}
+
+/* --- Overlay dimmer --- */
+#freeze.grid-form {
+	z-index: 1020 !important;
+	background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --- Responsive: full width on smaller screens --- */
+@media (max-width: 992px) {
+	.grid-row-open .form-in-grid {
+		width: 85% !important;
+		max-width: none !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.grid-row-open .form-in-grid {
+		width: 100% !important;
+	}
+}
+
+/* --- Close button (repurpose collapse-row) --- */
+.grid-row-open .form-in-grid .grid-collapse-row {
+	width: 32px !important;
+	height: 32px !important;
+	padding: 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 6px !important;
+	border: none !important;
+	background: transparent !important;
+	color: var(--gray-500) !important;
+	transition: background 0.15s ease !important;
+	order: 99 !important;
+}
+
+.grid-row-open .form-in-grid .grid-collapse-row:hover {
+	background: var(--gray-100) !important;
+	color: var(--gray-700) !important;
+}
+
+/* Replace the down-arrow icon with an X via CSS */
+.grid-row-open .form-in-grid .grid-collapse-row .icon {
+	display: none !important;
+}
+
+.grid-row-open .form-in-grid .grid-collapse-row::after {
+	content: "\00D7" !important;
+	font-size: 22px !important;
+	line-height: 1 !important;
+	font-weight: 300 !important;
+}
+
+/* --- Header layout fix for close button alignment --- */
+.grid-row-open .form-in-grid .grid-header-toolbar {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+}
+
+.grid-row-open .form-in-grid .grid-header-toolbar .row-actions {
+	display: flex !important;
+	align-items: center !important;
+	gap: 6px !important;
+	flex-wrap: wrap !important;
+}
+
+/* Ensure all action buttons are visible and remove pull-right float */
+.grid-row-open .form-in-grid .grid-header-toolbar .row-actions .btn {
+	float: none !important;
+}
+
+/* Show hidden-xs buttons inside sheet */
+.grid-row-open .form-in-grid .grid-header-toolbar .row-actions .hidden-xs {
+	display: inline-flex !important;
+}
+
+/* --- Dark mode --- */
+[data-theme="dark"] .grid-row-open .form-in-grid .grid-collapse-row:hover {
+	background: var(--gray-800) !important;
+	color: var(--gray-300) !important;
+}
+
+/* --- Dark mode --- */
+[data-theme="dark"] .grid-row-open .form-in-grid {
+	border-left-color: var(--gray-700) !important;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .grid-row-open .form-in-grid .grid-form-heading,
+[data-theme="dark"] .grid-row-open .form-in-grid .grid-footer-toolbar {
+	background: rgba(255, 255, 255, 0.03) !important;
+	border-color: var(--gray-700) !important;
+}
