@@ -3,7 +3,8 @@ name = "saas_theme"
 authors = [
     { name = "CommitStreet", email = "vineyrawat@yahoo.com"}
 ]
-description = "A theme"
+description = "A modern, polished SaaS UI theme for Frappe Framework — featuring a dual sidebar with workspace rail, redesigned form inputs, slide-in child table editor, enhanced attachments, and a refined dashboard experience."
+license = {text = "Proprietary"}
 requires-python = ">=3.14"
 readme = "README.md"
 dynamic = ["version"]

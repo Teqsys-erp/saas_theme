@@ -1,9 +1,9 @@
 app_name = "saas_theme"
-app_title = "Saas Theme"
+app_title = "Saas Theme by CommitStreet"
 app_publisher = "CommitStreet"
-app_description = "A theme"
+app_description = "A modern, polished SaaS UI theme for Frappe Framework — featuring a dual sidebar with workspace rail, redesigned form inputs, slide-in child table editor, enhanced attachments, and a refined dashboard experience."
 app_email = "vineyrawat@yahoo.com"
-app_license = "mit"
+app_license = "Proprietary"
 
 # Apps
 # ------------------
