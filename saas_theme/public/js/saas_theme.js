@@ -14,10 +14,12 @@ $(document).ready(function () {
 
 	frappe.after_ajax(function () {
 		saas_theme.sidebar.init();
+		saas_theme.attachments.init();
 	});
 });
 
 frappe.provide("saas_theme.sidebar");
+frappe.provide("saas_theme.attachments");
 
 saas_theme.sidebar = {
 	rail_built: false,
@@ -76,7 +78,7 @@ saas_theme.sidebar = {
 
 		this.$rail.find(".st-rail-item").on("mouseenter", function () {
 			const label = $(this).data("workspace");
-			const $tip = $('body > .st-rail-tooltip').filter(function () {
+			const $tip = $("body > .st-rail-tooltip").filter(function () {
 				return $(this).text().trim() === label;
 			});
 			if (!$tip.length) return;
@@ -108,14 +110,11 @@ saas_theme.sidebar = {
 	},
 
 	get_icon_for_workspace(ws) {
-		// Use header_icon from workspace sidebar data — these are espresso
-		// stroke-based icons that respect CSS color (ideal for dark rail)
 		const sidebar_data = frappe.boot.workspace_sidebar_item[ws.label.toLowerCase()];
 		if (sidebar_data && sidebar_data.header_icon) {
 			return frappe.utils.icon(sidebar_data.header_icon, "md", "", "", "", true);
 		}
 
-		// Fallback: first letter
 		const letter = ws.label.charAt(0).toUpperCase();
 		return `<span class="st-rail-initials">${letter}</span>`;
 	},
@@ -138,11 +137,6 @@ saas_theme.sidebar = {
 		});
 	},
 
-	/*
-	 * Show rail ONLY when frappe's sidebar is visible.
-	 * Frappe hides sidebar on pages like /desk (module picker).
-	 * We mirror that: rail visible = sidebar visible.
-	 */
 	toggle_rail_visibility() {
 		if (!this.$rail) return;
 
@@ -304,5 +298,106 @@ saas_theme.sidebar = {
 				frappe.msgprint(__("App is up to date."));
 				break;
 		}
+	},
+};
+
+/* ============================================
+   ATTACHMENT ENHANCEMENTS
+   ============================================ */
+
+saas_theme.attachments = {
+	ext_map: {
+		pdf:  { label: "PDF",  cls: "st-pdf" },
+		doc:  { label: "DOC",  cls: "st-doc" },
+		docx: { label: "DOC",  cls: "st-doc" },
+		xls:  { label: "XLS",  cls: "st-xls" },
+		xlsx: { label: "XLS",  cls: "st-xls" },
+		csv:  { label: "CSV",  cls: "st-xls" },
+		png:  { label: "PNG",  cls: "st-img" },
+		jpg:  { label: "JPG",  cls: "st-img" },
+		jpeg: { label: "JPG",  cls: "st-img" },
+		gif:  { label: "GIF",  cls: "st-img" },
+		svg:  { label: "SVG",  cls: "st-img" },
+		webp: { label: "IMG",  cls: "st-img" },
+		zip:  { label: "ZIP",  cls: "st-zip" },
+		gz:   { label: "GZ",   cls: "st-zip" },
+		rar:  { label: "RAR",  cls: "st-zip" },
+		"7z": { label: "7Z",   cls: "st-zip" },
+		js:   { label: "JS",   cls: "st-code" },
+		py:   { label: "PY",   cls: "st-code" },
+		json: { label: "JSON", cls: "st-code" },
+		html: { label: "HTML", cls: "st-code" },
+		css:  { label: "CSS",  cls: "st-code" },
+		txt:  { label: "TXT",  cls: "st-file" },
+		ppt:  { label: "PPT",  cls: "st-doc" },
+		pptx: { label: "PPT",  cls: "st-doc" },
+	},
+
+	init() {
+		this.listen();
+	},
+
+	get_file_info(filename) {
+		if (!filename) return { label: "FILE", cls: "st-file" };
+		const ext = filename.split(".").pop().toLowerCase();
+		return this.ext_map[ext] || { label: ext.substring(0, 4).toUpperCase(), cls: "st-file" };
+	},
+
+	enhance_all() {
+		const me = this;
+		$(".form-sidebar .attachment-row:not(.st-enhanced)").each(function () {
+			me.enhance_row($(this));
+		});
+	},
+
+	enhance_row($row) {
+		const $pill = $row.find(".data-pill");
+		if (!$pill.length) return;
+
+		const $label_link = $pill.find(".attachment-file-label");
+		if (!$label_link.length) return;
+
+		$row.addClass("st-enhanced");
+
+		const file_url = $label_link.attr("href") || "";
+		const filename = $label_link.attr("title") || $label_link.text().trim();
+		const file_info = this.get_file_info(filename);
+
+		const $lock_icon = $pill.find(".attachment-icon");
+		const lock_use = $lock_icon.find("use");
+		const lock_href_attr = lock_use.length ? lock_use.attr("href") : "";
+		const is_private = lock_href_attr === "#es-line-lock";
+		const lock_href = $lock_icon.attr("href") || "";
+
+		const $remove = $pill.find(".remove-btn").clone(true);
+		const escaped_name = frappe.utils.escape_html(filename);
+		const escaped_url = frappe.utils.escape_html(file_url);
+
+		// Replace entire pill content with clean structure
+		$pill.empty().addClass("st-attach-card").append(`
+			<div class="st-file-icon ${file_info.cls}">${file_info.label}</div>
+			<div class="st-attach-details">
+				<a class="st-attach-name" href="${escaped_url}" target="_blank" title="${escaped_name}">${escaped_name}</a>
+				<span class="st-attach-lock">
+					<a href="${frappe.utils.escape_html(lock_href)}" style="color:inherit;text-decoration:none">${is_private ? "Private" : "Public"}</a>
+				</span>
+			</div>
+		`);
+		if ($remove.length) {
+			$pill.append($remove);
+		}
+	},
+
+	listen() {
+		const me = this;
+		const debounced = frappe.utils.debounce(() => me.enhance_all(), 150);
+
+		// Catch form loads
+		$(document).on("form-refresh", () => setTimeout(debounced, 300));
+		$(document).on("page-change", () => setTimeout(debounced, 500));
+
+		// Observe entire body for attachment rows appearing
+		const observer = new MutationObserver(debounced);
+		observer.observe(document.body, { childList: true, subtree: true });
 	},
 };
