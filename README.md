@@ -1,6 +1,12 @@
-# Saas Theme by CommitStreet
+<p align="center">
+  <img src="saas_theme/www/logo.png" alt="Saas Theme Logo" width="120">
+</p>
 
-A modern, polished SaaS UI theme for **Frappe Framework v16** that transforms the default desk into a sleek, professional interface.
+<h1 align="center">Saas Theme by CommitStreet</h1>
+
+<p align="center">
+  A modern, polished SaaS UI theme for <strong>Frappe Framework v16</strong> that transforms the default desk into a sleek, professional interface.
+</p>
 
 ---
 
