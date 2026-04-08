@@ -149,8 +149,8 @@ app_include_js = "/assets/saas_theme/js/saas_theme.js?v=59"
 
 | Component | Version |
 |-----------|---------|
-| Frappe    | v16     |
-| ERPNext   | v16     |
+| Frappe    | >=v16     |
+| ERPNext   | >=v16     |
 | Python    | >= 3.14 |
 | Node.js   | >= 18   |
 
