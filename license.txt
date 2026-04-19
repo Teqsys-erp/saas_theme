@@ -2,6 +2,9 @@ Proprietary Software License
 
 Copyright (c) 2026 CommitStreet. All rights reserved.
 
+This license applies only to authorized purchasers. 
+No rights are granted to any other party.
+
 This software and its associated documentation files (the "Software") are the
 proprietary property of CommitStreet. The Software is licensed, not sold.
 
@@ -19,8 +22,7 @@ proprietary property of CommitStreet. The Software is licensed, not sold.
    c) Remove, alter, or obscure any proprietary notices, labels, or marks on
       the Software;
    d) Use the Software to create a competing product or service;
-   e) Share, publish, or make the Software available in any public repository
-      or distribution channel.
+   e) The Software may be publicly viewable for evaluation purposes, but no rights are granted to use, copy, modify, or distribute it.
 
 3. OWNERSHIP
    CommitStreet retains all right, title, and interest in and to the Software,
