@@ -97,7 +97,7 @@ def get_context(context):
 			)
 			context["social_login"] = True
 
-	if cint(frappe.db.get_value("LDAP Settings", "LDAP Settings", "enabled")):
+	if cint(frappe.db.get_single_value("LDAP Settings", "enabled")):
 		from frappe.integrations.doctype.ldap_settings.ldap_settings import LDAPSettings
 
 		context["ldap_settings"] = LDAPSettings.get_ldap_client_settings()

@@ -5,6 +5,7 @@ app_description = "A modern, polished SaaS UI theme for Frappe Framework — fea
 app_email = "vineyrawat@yahoo.com"
 app_license = "Proprietary"
 frappe_version = ">=16.0.0 <17.0.0"
+categories = ["Customization", "UI/UX"]
 
 # Apps
 # ------------------
