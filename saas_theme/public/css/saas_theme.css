@@ -1091,48 +1091,48 @@ a:hover {
 }
 
 .body-sidebar .standard-sidebar-item.active-sidebar .item-anchor {
-	color: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
 }
 
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-label {
 	font-weight: 560 !important;
-	color: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
 }
 
 /*
  * Icons — outlined, not filled.
  * frappe icons use stroke="currentColor" for line icons (es-line).
- * We set color + stroke to white, but NOT fill, so outlines stay outlined.
+ * We set color + stroke, but NOT fill, so outlines stay outlined.
  */
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon svg,
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon .icon,
 .body-sidebar .active-sidebar .sidebar-item-icon svg,
 .body-sidebar .active-sidebar .sidebar-item-icon .icon {
-	color: #FFFFFF !important;
-	stroke: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
+	stroke: var(--st-item-active-text) !important;
 }
 
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon .text-ink-gray-7,
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon .current-color,
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon span,
 .body-sidebar .active-sidebar .sidebar-item-icon span {
-	color: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
 }
 
 /* SVG use elements */
 .body-sidebar .active-sidebar .sidebar-item-icon svg use {
-	stroke: #FFFFFF !important;
-	color: #FFFFFF !important;
+	stroke: var(--st-item-active-text) !important;
+	color: var(--st-item-active-text) !important;
 }
 
 /* Nested active items */
 .body-sidebar .sidebar-item-container .active-sidebar .sidebar-item-label {
-	color: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
 }
 
 .body-sidebar .sidebar-item-container .active-sidebar .sidebar-item-icon svg {
-	color: #FFFFFF !important;
-	stroke: #FFFFFF !important;
+	color: var(--st-item-active-text) !important;
+	stroke: var(--st-item-active-text) !important;
 }
 
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-suffix .keyboard-shortcut {
@@ -1363,11 +1363,11 @@ a:hover {
 
 /* In dual sidebar mode, position after the rail + sidebar */
 body.st-dual-sidebar .dropdown-notifications .notifications-list {
-	left: calc(60px + 240px) !important;
+	left: calc(var(--st-rail-width) + 240px) !important;
 }
 
 body.st-dual-sidebar .body-sidebar-container:not(.expanded) .dropdown-notifications .notifications-list {
-	left: calc(60px + 50px) !important;
+	left: calc(var(--st-rail-width) + 50px) !important;
 }
 
 .hover {
@@ -1807,10 +1807,20 @@ body.st-dual-sidebar .main-section {
 	min-width: 0;
 }
 
+/* ===== Rail width — collapsed (icons) vs expanded (icons + labels) ===== */
+:root {
+	--st-rail-width: 60px;
+	--st-rail-width-expanded: 184px;
+}
+
+body.st-rail-expanded {
+	--st-rail-width: var(--st-rail-width-expanded);
+}
+
 /* ===== The Rail — dark by default ===== */
 .st-workspace-rail {
-	width: 60px;
-	min-width: 60px;
+	width: var(--st-rail-width);
+	min-width: var(--st-rail-width);
 	height: 100vh;
 	background: #0B1120;
 	border-right: 1px solid #1A2332;
@@ -1821,8 +1831,8 @@ body.st-dual-sidebar .main-section {
 	position: sticky;
 	top: 0;
 	z-index: 1021;
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow: hidden;
+	transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] .st-workspace-rail {
@@ -1838,12 +1848,15 @@ body.st-dual-sidebar .main-section {
 	width: 100%;
 	padding: 0 8px;
 	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 /* ===== Rail Item ===== */
 .st-rail-item {
 	width: 44px;
 	height: 44px;
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1930,6 +1943,242 @@ body.st-dual-sidebar .main-section {
 	color: #FFFFFF;
 }
 
+/* ===== Expanded mode — items become full-width rows with labels ===== */
+/* Metrics mirror the sidebar panel: 36px rows, 8px gap, 13.5px/480 labels, 16px icons */
+body.st-rail-expanded .st-rail-item,
+body.st-rail-resizing .st-rail-item {
+	width: 100%;
+	height: 36px;
+	justify-content: flex-start;
+	gap: 8px;
+	padding: 0 10px;
+}
+
+body.st-rail-expanded .st-rail-icon svg,
+body.st-rail-expanded .st-rail-icon .icon,
+body.st-rail-resizing .st-rail-icon svg,
+body.st-rail-resizing .st-rail-icon .icon {
+	width: 16px !important;
+	height: 16px !important;
+}
+
+.st-rail-label {
+	display: none;
+	flex: 1;
+	min-width: 0;
+	font-size: 13.5px;
+	font-weight: 480;
+	line-height: 1;
+	color: rgba(255, 255, 255, 0.65);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition: color 0.15s ease;
+}
+
+body.st-rail-expanded .st-rail-label,
+body.st-rail-resizing .st-rail-label {
+	display: block;
+}
+
+.st-rail-item:hover .st-rail-label {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.st-rail-item.active .st-rail-label {
+	color: #FFFFFF;
+}
+
+/* ===== Rail search ===== */
+.st-rail-search {
+	width: 100%;
+	padding: 0 8px;
+	margin-bottom: 6px;
+	flex-shrink: 0;
+}
+
+.st-rail-search-btn {
+	width: 44px;
+	height: 40px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.st-rail-search-btn:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.st-rail-search-btn svg {
+	width: 18px;
+	height: 18px;
+	color: rgba(255, 255, 255, 0.45);
+	transition: color 0.15s ease;
+}
+
+.st-rail-search-btn:hover svg {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.st-rail-search-box {
+	display: none;
+	align-items: center;
+	gap: 8px;
+	height: 36px;
+	padding: 0 10px;
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.st-rail-search-box:focus-within {
+	border-color: rgba(255, 255, 255, 0.25);
+	background: rgba(255, 255, 255, 0.09);
+}
+
+.st-rail-search-box svg {
+	width: 15px;
+	height: 15px;
+	color: rgba(255, 255, 255, 0.4);
+	flex-shrink: 0;
+}
+
+.st-rail-search-box input {
+	flex: 1;
+	min-width: 0;
+	background: transparent;
+	border: none;
+	outline: none;
+	box-shadow: none;
+	color: rgba(255, 255, 255, 0.9);
+	font-size: 13.5px;
+	font-weight: 400;
+	padding: 0;
+}
+
+.st-rail-search-box input::placeholder {
+	color: rgba(255, 255, 255, 0.35);
+}
+
+.st-rail-search-clear {
+	display: none;
+	color: rgba(255, 255, 255, 0.4);
+	cursor: pointer;
+	font-size: 15px;
+	line-height: 1;
+	flex-shrink: 0;
+}
+
+.st-rail-search-clear:hover {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.st-workspace-rail.st-filtering .st-rail-search-clear {
+	display: block;
+}
+
+body.st-rail-expanded .st-rail-search-box,
+body.st-rail-resizing .st-rail-search-box {
+	display: flex;
+}
+
+body.st-rail-expanded .st-rail-search-btn,
+body.st-rail-resizing .st-rail-search-btn {
+	display: none;
+}
+
+.st-rail-item.st-rail-hidden {
+	display: none !important;
+}
+
+.st-rail-empty {
+	display: none;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.35);
+	text-align: center;
+	padding: 10px 8px;
+	flex-shrink: 0;
+}
+
+.st-rail-empty.visible {
+	display: block;
+}
+
+/* ===== Rail bottom — expand/collapse toggle ===== */
+.st-rail-bottom {
+	flex-shrink: 0;
+	width: 100%;
+	padding: 6px 8px 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	margin-top: 6px;
+}
+
+.st-rail-toggle {
+	width: 44px;
+	height: 36px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+body.st-rail-expanded .st-rail-toggle {
+	width: 100%;
+}
+
+.st-rail-toggle:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.st-rail-toggle svg {
+	width: 16px;
+	height: 16px;
+	color: rgba(255, 255, 255, 0.45);
+	transition: transform 0.2s ease, color 0.15s ease;
+}
+
+body.st-rail-expanded .st-rail-toggle svg {
+	transform: rotate(180deg);
+}
+
+.st-rail-toggle:hover svg {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===== Rail resizer — drag edge, snaps to nearest state ===== */
+.st-rail-resizer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 5px;
+	height: 100%;
+	cursor: col-resize;
+	z-index: 5;
+}
+
+.st-rail-resizer:hover,
+body.st-rail-resizing .st-rail-resizer {
+	background: rgba(0, 82, 255, 0.4);
+}
+
+body.st-rail-resizing {
+	cursor: col-resize;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+body.st-rail-resizing .st-workspace-rail {
+	transition: none;
+}
+
 /* ===== Rail Tooltip (fixed position, set by JS) ===== */
 .st-rail-tooltip {
 	position: fixed;
@@ -1990,16 +2239,16 @@ body.st-dual-sidebar .sidebar-header .drop-icon {
 	display: none !important;
 }
 
-/* Rail scrollbar */
-.st-workspace-rail::-webkit-scrollbar {
+/* Rail scrollbar (items list scrolls; search and toggle stay fixed) */
+.st-rail-top::-webkit-scrollbar {
 	width: 2px;
 }
 
-.st-workspace-rail::-webkit-scrollbar-track {
+.st-rail-top::-webkit-scrollbar-track {
 	background: transparent;
 }
 
-.st-workspace-rail::-webkit-scrollbar-thumb {
+.st-rail-top::-webkit-scrollbar-thumb {
 	background: rgba(255, 255, 255, 0.1);
 	border-radius: 2px;
 }
@@ -2018,7 +2267,7 @@ body.st-dual-sidebar .overlay {
 
 /* ===== Onboarding panel — shift right for workspace rail ===== */
 body.st-dual-sidebar .onb-panel {
-	left: calc(60px + 236px) !important;
+	left: calc(var(--st-rail-width) + 236px) !important;
 }
 
 /* ============================================
