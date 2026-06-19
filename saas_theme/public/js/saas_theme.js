@@ -33,6 +33,7 @@ saas_theme.sidebar = {
 	rail_built: false,
 
 	init() {
+		this.restore_rail_state();
 		this.build_workspace_rail();
 		this.setup_user_menu();
 		if (!this._listeners_bound) {
@@ -62,15 +63,36 @@ saas_theme.sidebar = {
 					<div class="st-rail-icon">
 						${icon_content}
 					</div>
+					<span class="st-rail-label">${escaped_label}</span>
 					<span class="st-rail-tooltip">${escaped_label}</span>
 				</div>`;
 		});
 
+		const search_svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`;
+		const chevrons_svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/></svg>`;
+
 		this.$rail = $(`
 			<div class="st-workspace-rail">
+				<div class="st-rail-search">
+					<div class="st-rail-search-btn" title="${__("Search workspaces")}">
+						${search_svg}
+					</div>
+					<div class="st-rail-search-box">
+						${search_svg}
+						<input type="text" placeholder="${__("Search")}" spellcheck="false">
+						<span class="st-rail-search-clear" title="${__("Clear")}">&times;</span>
+					</div>
+				</div>
 				<div class="st-rail-top">
 					${icons_html}
 				</div>
+				<div class="st-rail-empty">${__("No workspaces found")}</div>
+				<div class="st-rail-bottom">
+					<div class="st-rail-toggle" title="${__("Expand / collapse")}">
+						${chevrons_svg}
+					</div>
+				</div>
+				<div class="st-rail-resizer"></div>
 			</div>
 		`);
 
@@ -88,6 +110,9 @@ saas_theme.sidebar = {
 		});
 
 		this.$rail.find(".st-rail-item").on("mouseenter", function () {
+			// Labels are visible in expanded mode — no tooltip needed
+			if (document.body.classList.contains("st-rail-expanded")) return;
+
 			const label = $(this).data("workspace");
 			const $tip = $("body > .st-rail-tooltip").filter(function () {
 				return $(this).text().trim() === label;
@@ -103,8 +128,126 @@ saas_theme.sidebar = {
 			$("body > .st-rail-tooltip").removeClass("visible");
 		});
 
+		this.setup_rail_search();
+		this.setup_rail_toggle();
+		this.setup_rail_resizer();
+
 		this.rail_built = true;
 		this.update_rail_active();
+	},
+
+	/* ============================================
+	   RAIL EXPAND / COLLAPSE + SEARCH
+	   ============================================ */
+
+	restore_rail_state() {
+		let expanded = false;
+		try {
+			expanded = localStorage.getItem("st_rail_expanded") === "1";
+		} catch (e) {
+			// localStorage unavailable — stay collapsed
+		}
+		$("body").toggleClass("st-rail-expanded", expanded);
+	},
+
+	set_rail_expanded(expanded) {
+		$("body").toggleClass("st-rail-expanded", !!expanded);
+		try {
+			localStorage.setItem("st_rail_expanded", expanded ? "1" : "0");
+		} catch (e) {
+			// non-persistent, still works for the session
+		}
+		$("body > .st-rail-tooltip").removeClass("visible");
+		if (!expanded && this.$rail) {
+			// Collapsing hides the search box — drop any active filter with it
+			this.$rail.find(".st-rail-search-box input").val("");
+			this.filter_rail("");
+		}
+	},
+
+	setup_rail_toggle() {
+		const me = this;
+		this.$rail.find(".st-rail-toggle").on("click", () => {
+			me.set_rail_expanded(!$("body").hasClass("st-rail-expanded"));
+		});
+	},
+
+	setup_rail_search() {
+		const me = this;
+		const $input = this.$rail.find(".st-rail-search-box input");
+
+		// Collapsed mode: the search icon expands the rail and focuses the input
+		this.$rail.find(".st-rail-search-btn").on("click", () => {
+			me.set_rail_expanded(true);
+			setTimeout(() => $input.trigger("focus"), 220);
+		});
+
+		$input.on("input", () => me.filter_rail($input.val()));
+
+		$input.on("keydown", (e) => {
+			if (e.key === "Escape") {
+				$input.val("");
+				me.filter_rail("");
+				$input.trigger("blur");
+			} else if (e.key === "Enter") {
+				const $first = me.$rail.find(".st-rail-item:not(.st-rail-hidden)").first();
+				if ($first.length) $first.trigger("click");
+			}
+		});
+
+		this.$rail.find(".st-rail-search-clear").on("click", () => {
+			$input.val("");
+			me.filter_rail("");
+			$input.trigger("focus");
+		});
+	},
+
+	filter_rail(query) {
+		if (!this.$rail) return;
+		const q = (query || "").toLowerCase().trim();
+		let visible = 0;
+
+		this.$rail.find(".st-rail-item").each(function () {
+			const ws = String($(this).data("workspace") || "").toLowerCase();
+			const match = !q || ws.includes(q);
+			$(this).toggleClass("st-rail-hidden", !match);
+			if (match) visible++;
+		});
+
+		this.$rail.toggleClass("st-filtering", !!q);
+		this.$rail.find(".st-rail-empty").toggleClass("visible", !!q && visible === 0);
+	},
+
+	setup_rail_resizer() {
+		const me = this;
+		const rail = this.$rail[0];
+		const MIN = 60;
+		const MAX = 184;
+
+		this.$rail.find(".st-rail-resizer").on("mousedown", function (e) {
+			e.preventDefault();
+			const start_x = e.clientX;
+			const start_w = rail.getBoundingClientRect().width;
+			$("body").addClass("st-rail-resizing");
+
+			const on_move = (ev) => {
+				const w = Math.min(MAX, Math.max(MIN, start_w + (ev.clientX - start_x)));
+				rail.style.width = w + "px";
+				rail.style.minWidth = w + "px";
+			};
+
+			const on_up = () => {
+				$(document).off("mousemove", on_move).off("mouseup", on_up);
+				$("body").removeClass("st-rail-resizing");
+				const w = rail.getBoundingClientRect().width;
+				rail.style.width = "";
+				rail.style.minWidth = "";
+				// Snap to the nearest state
+				me.set_rail_expanded(w > (MIN + MAX) / 2);
+			};
+
+			$(document).on("mousemove", on_move).on("mouseup", on_up);
+		});
 	},
 
 	get_workspaces() {
