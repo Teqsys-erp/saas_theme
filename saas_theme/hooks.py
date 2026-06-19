@@ -3,7 +3,7 @@ app_title = "Saas Theme by CommitStreet"
 app_publisher = "CommitStreet"
 app_description = "A modern, polished SaaS UI theme for Frappe Framework — featuring a dual sidebar with workspace rail, redesigned form inputs, slide-in child table editor, enhanced attachments, and a refined dashboard experience."
 app_email = "vineyrawat@yahoo.com"
-app_license = "Proprietary"
+app_license = "MIT"
 frappe_version = ">=16.0.0 <17.0.0"
 categories = ["Customization", "UI/UX"]
 
@@ -27,8 +27,8 @@ categories = ["Customization", "UI/UX"]
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/saas_theme/css/saas_theme.css?v=62"
-app_include_js = "/assets/saas_theme/js/saas_theme.js?v=62"
+app_include_css = "/assets/saas_theme/css/saas_theme.css?v=63"
+app_include_js = "/assets/saas_theme/js/saas_theme.js?v=63"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/saas_theme/css/login.css"
