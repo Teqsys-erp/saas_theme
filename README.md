@@ -159,7 +159,4 @@ For support, feature requests, or bug reports, contact:
 ---
 
 ## License
-
-**Proprietary** - Copyright (c) 2026 CommitStreet. All rights reserved.
-
-This software is licensed for use only. Redistribution, modification, and derivative works are prohibited. See [license.txt](license.txt) for full terms.
+MIT
