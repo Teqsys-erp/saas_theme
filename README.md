@@ -153,8 +153,8 @@ app_include_js = "/assets/saas_theme/js/saas_theme.js?v=59"
 
 For support, feature requests, or bug reports, contact:
 
-- **Email**: vineyrawat@yahoo.com, contact@vinay-rawat.dev
-- **Publisher**: [CommitStreet](https://github.com/vineyrawat)
+- **Email**: vineyrawat@yahoo.com, vinay@vinay-rawat.dev
+- **Publisher**: [Vinay Rawat](https://github.com/vineyrawat)
 
 ---
 
