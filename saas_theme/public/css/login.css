@@ -24,10 +24,13 @@ body[data-path="login"] .page-breadcrumbs {
 /* ===== Page background ===== */
 body[data-path="login"] {
         background: #f4f6fb !important;
+        height: 100vh;
+        overflow: hidden;
 }
 
 body[data-path="login"] .page-content-wrapper {
-        min-height: 100vh;
+        height: 100vh;
+        box-sizing: border-box;
         display: flex !important;
         align-items: center;
         justify-content: center;
@@ -56,7 +59,7 @@ body[data-path="login"] .page-content-wrapper::before {
         flex-direction: row !important;
         width: 100%;
         max-width: 1040px;
-        min-height: 620px;
+        height: min(620px, calc(100vh - 80px));
         margin: 0 auto;
         padding: 0;
         border-radius: 32px;
@@ -135,7 +138,7 @@ body[data-path="login"] .page-content-wrapper::before {
 }
 
 .st-panel-logo svg {
-        width: 190px; /* was 260px — change this value to resize the logo */
+        width: clamp(140px, 16vw, 190px); /* scales with screen width, capped between 140px and 190px */
         height: auto;
 }
 
