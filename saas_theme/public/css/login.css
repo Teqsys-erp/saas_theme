@@ -1,7 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 /*
  * SaaS Theme — Login Page (Split Layout)
- * People360 — v28
+ * CommitStreet
  */
+
+/* ===== Inter font — apply globally ===== */
+body[data-path="login"],
+body[data-path="login"] input,
+body[data-path="login"] button,
+body[data-path="login"] a,
+body[data-path="login"] p,
+body[data-path="login"] h2,
+body[data-path="login"] h4,
+body[data-path="login"] span,
+body[data-path="login"] label {
+	font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
 
 /* ===== Hide navbar, footer, breadcrumbs ===== */
 body[data-path="login"] .web-header,
@@ -11,44 +26,45 @@ body[data-path="login"] .page-breadcrumbs {
 	display: none !important;
 }
 
-/* ===== Reset page ===== */
-html, body {
-	margin: 0 !important;
-	padding: 0 !important;
-	height: 100% !important;
-	overflow: hidden !important;
-}
-
+/* ===== Remove default page padding/margins ===== */
 body[data-path="login"] {
 	background: #fff !important;
 }
 
 body[data-path="login"] .page-content-wrapper {
-	min-height: 100vh !important;
-	height: 100vh !important;
+	min-height: 100vh;
 	padding: 0 !important;
 	margin: 0 !important;
-	overflow: hidden !important;
-	max-width: 100% !important;
 }
 
-/* ===== Wrapper — full viewport, no scroll ===== */
+/* ===== Two-column split wrapper ===== */
 .st-login-wrapper {
 	display: flex !important;
 	flex-direction: row !important;
-	width: 100vw !important;
-	height: 100vh !important;
-	overflow: hidden !important;
-	margin: 0 !important;
-	padding: 0 !important;
+	min-height: 100vh;
+	width: 100vw;
+	margin: 0;
+	padding: 0;
 }
 
-/* ===== LEFT — Dark brand panel ===== */
+/* ===== Left column — form ===== */
+.st-login-form-col {
+	flex: 1 1 50%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 80px;
+	background: #fff;
+	overflow-y: auto;
+}
+
+/* ===== Right panel ===== */
 .st-login-panel {
-	flex: 0 0 50%;
-	width: 50%;
-	height: 100vh;
-	background: linear-gradient(160deg, #0d1f3c 0%, #0a2a50 60%, #0d2d5a 100%);
+	flex: 1 1 50%;
+	min-height: 100vh;
+	background: linear-gradient(160deg, #EDF2FB 0%, #D6E4F7 40%, #C5D8F0 100%);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -58,250 +74,214 @@ body[data-path="login"] .page-content-wrapper {
 	overflow: hidden;
 }
 
-/* floating decorative bars */
+/* Decorative floating bars */
 .st-login-panel::before,
 .st-login-panel::after {
 	content: "";
 	position: absolute;
 	width: 6px;
 	border-radius: 100px;
-	background: rgba(255, 255, 255, 0.06);
+	background: rgba(255, 255, 255, 0.5);
 }
-.st-login-panel::before { height: 120px; top: 18%; right: 14%; transform: rotate(15deg); }
-.st-login-panel::after  { height: 80px;  bottom: 22%; right: 22%; transform: rotate(15deg); }
 
-.st-float-bar {
-	position: absolute;
-	width: 5px;
-	border-radius: 100px;
-	background: rgba(255, 255, 255, 0.05);
+.st-login-panel::before {
+	height: 120px;
+	top: 20%;
+	right: 15%;
+	transform: rotate(15deg);
 }
-.st-float-bar:nth-child(2) { height: 60px;  top: 33%;    left: 10%; transform: rotate(15deg); }
-.st-float-bar:nth-child(3) { height: 100px; bottom: 14%; left: 18%; transform: rotate(15deg); }
-.st-float-bar:nth-child(4) { height: 40px;  top: 53%;    right: 9%; transform: rotate(15deg); }
 
-/* Panel content */
+.st-login-panel::after {
+	height: 80px;
+	bottom: 25%;
+	right: 25%;
+	transform: rotate(15deg);
+}
+
 .st-panel-content {
 	position: relative;
 	z-index: 1;
 	text-align: center;
-	width: 100%;
-	max-width: 440px;
+	max-width: 520px;
 }
 
-/* Logo */
-.st-panel-logo {
+.st-panel-icon {
+	width: 120px;
+	height: 120px;
+	margin: 0 auto 32px;
+	background: linear-gradient(135deg, #B8D4F0 0%, #8BB8E8 100%);
+	border-radius: 24px;
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	margin-bottom: 32px;
+	justify-content: center;
+	box-shadow: 0 8px 32px rgba(0, 82, 255, 0.12);
+	transform: rotate(-5deg);
 }
 
-/* Heading & paragraph */
+.st-panel-icon svg {
+	width: 48px;
+	height: 48px;
+	color: #fff;
+	transform: rotate(5deg);
+}
+
 .st-panel-content h2 {
 	font-size: 26px;
 	font-weight: 700;
-	color: #e8f0fc;
+	color: #0A2540;
 	line-height: 1.3;
 	margin-bottom: 12px;
 }
+
 .st-panel-content p {
 	font-size: 14px;
-	color: #8aa4c8;
+	color: #5A6B7F;
 	line-height: 1.7;
 	margin-bottom: 0;
 }
 
-/* Module grid */
-.st-module-grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 12px;
-	margin-top: 28px;
-}
-.st-module-card {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
-	padding: 16px 8px;
-	background: rgba(255, 255, 255, 0.07);
-	border: 1px solid rgba(255, 255, 255, 0.13);
-	border-radius: 14px;
-	transition: background 0.2s;
-}
-.st-module-card:hover { background: rgba(255, 255, 255, 0.12); }
-
-.st-module-icon {
-	width: 48px;
-	height: 48px;
-	border-radius: 12px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-.st-module-icon.erp  { background: rgba(0, 82, 255, 0.22);   color: #5b9aff; }
-.st-module-icon.crm  { background: rgba(0, 180, 130, 0.22);  color: #1dc99a; }
-.st-module-icon.hrms { background: rgba(230, 100, 50, 0.22); color: #f07040; }
-.st-module-icon.hd   { background: rgba(160, 80, 220, 0.22); color: #c07aee; }
-.st-module-icon svg  { width: 24px; height: 24px; stroke: currentColor; }
-
-.st-module-card span {
-	font-size: 12px;
-	font-weight: 500;
-	color: #8aa4c8;
-	letter-spacing: 0.04em;
-}
-
-/* Copyright */
-.st-panel-copyright {
+/* Extra floating bar decoration */
+.st-float-bar {
 	position: absolute;
-	bottom: 20px;
-	left: 0;
-	right: 0;
+	width: 5px;
+	border-radius: 100px;
+	background: rgba(255, 255, 255, 0.4);
+}
+
+.st-float-bar:nth-child(2) {
+	height: 60px;
+	top: 35%;
+	left: 12%;
+	transform: rotate(15deg);
+}
+
+.st-float-bar:nth-child(3) {
+	height: 100px;
+	bottom: 15%;
+	left: 20%;
+	transform: rotate(15deg);
+}
+
+.st-float-bar:nth-child(4) {
+	height: 40px;
+	top: 55%;
+	right: 10%;
+	transform: rotate(15deg);
+}
+
+/* ===== Logo ===== */
+.st-login-form-col .page-card-head {
+	padding: 0 0 8px;
 	text-align: center;
-	font-size: 12px;
-	color: rgba(138, 164, 200, 0.45);
-	z-index: 1;
-}
-
-/* ===== RIGHT — Login form ===== */
-.st-login-form-col {
-	flex: 0 0 50%;
-	width: 50%;
-	height: 100vh;
-	background: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-
-/* inner container — fixed width, centered */
-.st-form-inner {
 	width: 100%;
-	max-width: 420px;
-	padding: 40px 24px;
+	max-width: 520px !important;
 }
 
-/* ===== Logo + title head ===== */
-.st-form-head {
-	text-align: center;
-	margin-bottom: 28px;
+.st-login-form-col .page-card-head img.app-logo {
+	max-height: 42px;
 }
-.st-app-logo {
-	max-height: 48px;
-	display: block;
-	margin: 0 auto 16px;
-}
-.st-form-title {
-	font-size: 24px;
+
+.st-login-form-col .page-card-head h4 {
+	font-size: 26px;
 	font-weight: 700;
 	color: #0A2540;
 	letter-spacing: -0.02em;
-	margin: 0;
+	margin-top: 24px;
+	margin-bottom: 4px;
 }
 
-/* ===== Card — flat ===== */
+/* ===== Card — flat, no border ===== */
 .st-login-form-col .page-card {
-	border: none !important;
-	background: transparent !important;
-	box-shadow: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	width: 100% !important;
 	max-width: 100% !important;
+	width: 100% !important;
+	padding: 20px 0 0;
+	border-radius: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	margin: 0 auto;
 }
-.st-login-form-col .page-card form,
+
+.st-login-form-col .page-card form {
+	max-width: 100% !important;
+	width: 100% !important;
+}
+
 .st-login-form-col .page-card .page-card-body {
-	width: 100% !important;
 	max-width: 100% !important;
 }
 
-/* ===== Field wrapper — icon perfectly centered ===== */
-.st-field-wrap {
-	position: relative;
-	width: 100%;
-	margin-bottom: 14px;
+.st-login-form-col .form-control {
+	width: 100% !important;
 }
 
-/* Icon sits at exact vertical center of 48px input */
-.st-field-icon {
-	position: absolute;
-	left: 14px;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 16px;
-	height: 16px;
-	fill: #8792A2;
-	pointer-events: none;
-	z-index: 2;
-}
-
-/* Show/hide toggle — exact vertical center */
-.st-toggle-password {
-	position: absolute;
-	right: 14px;
-	top: 50%;
-	transform: translateY(-50%);
-	font-size: 12px;
-	color: #8792A2;
-	font-weight: 500;
-	cursor: pointer;
-	z-index: 2;
-	line-height: 1;
-}
-.st-toggle-password:hover { color: #0052FF; }
-
-/* ===== Input styling ===== */
-.st-input,
+/* ===== Inputs ===== */
 .st-login-form-col .page-card-body input[type="text"],
 .st-login-form-col .page-card-body input[type="email"],
 .st-login-form-col .page-card-body input[type="password"] {
-	width: 100% !important;
-	height: 48px !important;
-	border: 1.5px solid #E3E8EE !important;
+	border: 1px solid #E3E8EE !important;
 	border-radius: 10px !important;
 	background: #fff !important;
+	height: 48px !important;
 	font-size: 14px !important;
-	padding: 0 42px !important;
-	box-sizing: border-box !important;
-	margin-bottom: 0 !important;
-	transition: border-color 0.15s, box-shadow 0.15s !important;
-	color: #0A2540 !important;
+	padding-left: 42px !important;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+	margin-bottom: 14px !important;
 }
 
-.st-input:focus,
 .st-login-form-col .page-card-body input:focus {
 	border-color: #0052FF !important;
 	box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.1) !important;
 	outline: none !important;
 }
 
-/* Invalid */
-.st-login-form-col .page-card-body.invalid input {
+/* ===== Invalid ===== */
+.st-login-form-col .page-card-body.invalid input[type="text"],
+.st-login-form-col .page-card-body.invalid input[type="email"],
+.st-login-form-col .page-card-body.invalid input[type="password"] {
 	border-color: #e03636 !important;
 	box-shadow: 0 0 0 3px rgba(224, 54, 54, 0.1) !important;
 }
 
-/* ===== Forgot password — left aligned under field ===== */
-.st-forgot {
-	margin: 6px 0 12px !important;
-	text-align: right !important;
+/* ===== Field icons ===== */
+.st-login-form-col .field-icon {
+	left: 14px !important;
+	fill: #8792A2 !important;
 }
-.st-forgot a {
+
+.st-login-form-col .toggle-password {
+	right: 14px !important;
+	top: 14px !important;
+	font-size: 12px !important;
+	color: #8792A2 !important;
+	font-weight: 500 !important;
+}
+
+.st-login-form-col .toggle-password:hover {
+	color: #0052FF !important;
+}
+
+/* ===== Forgot password ===== */
+.st-login-form-col .forgot-password-message {
+	margin-top: -6px !important;
+	margin-bottom: 6px !important;
+}
+
+.st-login-form-col .forgot-password-message a {
 	color: #697386 !important;
 	font-size: 13px !important;
 	text-decoration: none !important;
 }
-.st-forgot a:hover { color: #0052FF !important; }
 
-/* ===== Login button — same width as fields ===== */
-.st-btn-login,
+.st-login-form-col .forgot-password-message a:hover {
+	color: #0052FF !important;
+}
+
+/* ===== All primary buttons ===== */
+.st-login-form-col .btn-primary,
 .st-login-form-col .btn-login,
-.st-login-form-col .btn-primary {
-	width: 100% !important;
+.st-login-form-col .btn-forgot,
+.st-login-form-col .btn-login-with-email-link {
 	height: 48px !important;
 	border-radius: 10px !important;
 	font-size: 15px !important;
@@ -310,20 +290,23 @@ body[data-path="login"] .page-content-wrapper {
 	border: none !important;
 	color: #fff !important;
 	box-shadow: none !important;
-	transition: all 0.15s !important;
-	display: block !important;
+	transition: all 0.15s ease !important;
 }
-.st-btn-login:hover,
+
+.st-login-form-col .btn-primary:hover,
 .st-login-form-col .btn-login:hover,
-.st-login-form-col .btn-primary:hover {
+.st-login-form-col .btn-forgot:hover,
+.st-login-form-col .btn-login-with-email-link:hover {
 	background: #0047DB !important;
-	box-shadow: 0 4px 14px rgba(0, 82, 255, 0.3) !important;
-	transform: translateY(-1px) !important;
+	box-shadow: 0 4px 12px rgba(0, 82, 255, 0.25) !important;
+	transform: translateY(-1px);
 }
-.st-btn-login:active,
+
+.st-login-form-col .btn-primary:active,
 .st-login-form-col .btn-login:active,
-.st-login-form-col .btn-primary:active {
-	transform: translateY(0) !important;
+.st-login-form-col .btn-forgot:active,
+.st-login-form-col .btn-login-with-email-link:active {
+	transform: translateY(0);
 }
 
 /* ===== Secondary buttons ===== */
@@ -331,7 +314,6 @@ body[data-path="login"] .page-content-wrapper {
 	height: 48px !important;
 	border-radius: 10px !important;
 	font-weight: 500 !important;
-	width: 100% !important;
 }
 
 /* ===== Divider ===== */
@@ -339,73 +321,92 @@ body[data-path="login"] .page-content-wrapper {
 	color: #A3ACB9 !important;
 	font-size: 13px !important;
 	position: relative;
-	margin: 20px 0 !important;
-	text-align: center;
+	margin: 22px 0 !important;
 }
+
 .st-login-form-col .login-divider::before,
 .st-login-form-col .login-divider::after {
 	content: "";
 	position: absolute;
 	top: 50%;
-	width: 42%;
+	width: 38%;
 	height: 1px;
 	background: #E3E8EE;
 }
+
 .st-login-form-col .login-divider::before { left: 0; }
-.st-login-form-col .login-divider::after  { right: 0; }
+.st-login-form-col .login-divider::after { right: 0; }
 
 /* ===== Social buttons ===== */
 .st-login-form-col .btn-login-option {
 	height: 44px !important;
 	border-radius: 10px !important;
-	border: 1.5px solid #E3E8EE !important;
+	border: 1px solid #E3E8EE !important;
 	background: #fff !important;
 	font-size: 13px !important;
 	font-weight: 500 !important;
 	color: #425466 !important;
-	width: 100% !important;
-	transition: all 0.15s !important;
+	transition: all 0.15s ease !important;
 }
+
 .st-login-form-col .btn-login-option:hover {
 	background: #F6F9FC !important;
 	border-color: #D3D9E0 !important;
 }
 
-/* ===== Sign up message ===== */
+/* ===== Sign up / back to login ===== */
 .st-login-form-col .sign-up-message {
 	font-size: 13px !important;
 	color: #697386 !important;
 	margin-top: 16px !important;
-	text-align: center !important;
 }
+
 .st-login-form-col .sign-up-message a {
 	color: #0052FF !important;
 	font-weight: 500 !important;
 	text-decoration: none !important;
 }
-.st-login-form-col .sign-up-message a:hover { text-decoration: underline !important; }
 
-/* ===== Mobile ===== */
+.st-login-form-col .sign-up-message a:hover {
+	text-decoration: underline !important;
+}
+
+/* ===== Mobile — hide right panel, full width form ===== */
 @media (max-width: 768px) {
-	.st-login-wrapper { flex-direction: column !important; }
-	.st-login-panel   { display: none !important; }
-	.st-login-form-col {
-		flex: 1 1 100% !important;
-		width: 100% !important;
-		height: 100vh !important;
-		padding: 0 !important;
+	.st-login-wrapper {
+		flex-direction: column !important;
 	}
-	.st-form-inner {
-		padding: 40px 24px !important;
+
+	.st-login-panel {
+		display: none !important;
+	}
+
+	.st-login-form-col {
+		flex: 1 1 100%;
+		width: 100%;
+		min-height: 100vh;
+		padding: 32px 24px;
+		background: linear-gradient(180deg, #F0F4FA 0%, #fff 30%);
+	}
+
+	.st-login-form-col .page-card {
+		max-width: 100%;
 	}
 }
 
 /* ===== Dark mode ===== */
-[data-theme="dark"] body[data-path="login"] { background: #0d1117 !important; }
-[data-theme="dark"] .st-login-form-col { background: #0d1117 !important; }
-[data-theme="dark"] .st-form-title { color: #e6edf3 !important; }
+[data-theme="dark"] body[data-path="login"] {
+	background: #0d1117 !important;
+}
 
-[data-theme="dark"] .st-input,
+[data-theme="dark"] .st-login-form-col {
+	background: #0d1117;
+}
+
+[data-theme="dark"] .st-login-form-col .page-card-head h4 {
+	color: #e6edf3;
+}
+
 [data-theme="dark"] .st-login-form-col .page-card-body input[type="text"],
 [data-theme="dark"] .st-login-form-col .page-card-body input[type="email"],
 [data-theme="dark"] .st-login-form-col .page-card-body input[type="password"] {
@@ -413,22 +414,47 @@ body[data-path="login"] .page-content-wrapper {
 	border-color: #30363d !important;
 	color: #e6edf3 !important;
 }
-[data-theme="dark"] .st-input:focus,
+
 [data-theme="dark"] .st-login-form-col .page-card-body input:focus {
 	border-color: #0052FF !important;
 	box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.2) !important;
 }
+
 [data-theme="dark"] .st-login-form-col .btn-login-option {
 	background: #161b22 !important;
 	border-color: #30363d !important;
 	color: #e6edf3 !important;
 }
+
+[data-theme="dark"] .st-login-form-col .btn-login-option:hover {
+	background: #1c2128 !important;
+	border-color: #484f58 !important;
+}
+
 [data-theme="dark"] .st-login-panel {
-	background: linear-gradient(160deg, #0a1628 0%, #071a38 60%, #091e40 100%) !important;
+	background: linear-gradient(160deg, #0d1117 0%, #141d2b 40%, #0d1930 100%);
+}
+
+[data-theme="dark"] .st-panel-icon {
+	background: linear-gradient(135deg, #1a3050 0%, #0d2040 100%);
+}
+
+[data-theme="dark"] .st-panel-content h2 {
+	color: #e6edf3;
+}
+
+[data-theme="dark"] .st-panel-content p {
+	color: #8b949e;
+}
+
+[data-theme="dark"] .st-float-bar,
+[data-theme="dark"] .st-login-panel::before,
+[data-theme="dark"] .st-login-panel::after {
+	background: rgba(255, 255, 255, 0.06);
 }
 
 @media (max-width: 768px) {
 	[data-theme="dark"] .st-login-form-col {
-		background: linear-gradient(180deg, #161b22 0%, #0d1117 30%) !important;
+		background: linear-gradient(180deg, #161b22 0%, #0d1117 30%);
 	}
 }
