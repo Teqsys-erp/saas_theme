@@ -2,8 +2,28 @@
 
 /*
  * SaaS Theme — Login Page (Split Layout)
- * CommitStreet
+ * CommitStreet / klaariti
  */
+
+/* ===== Global reset — kills the outer scrollbars ===== */
+body[data-path="login"],
+body[data-path="login"] html {
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	height: 100vh;
+}
+
+html:has(body[data-path="login"]) {
+	overflow: hidden !important;
+	height: 100%;
+}
+
+body[data-path="login"] *,
+body[data-path="login"] *::before,
+body[data-path="login"] *::after {
+	box-sizing: border-box;
+}
 
 /* ===== Inter font — apply globally ===== */
 body[data-path="login"],
@@ -32,69 +52,64 @@ body[data-path="login"] {
 }
 
 body[data-path="login"] .page-content-wrapper {
+	height: 100vh;
 	min-height: 100vh;
 	padding: 0 !important;
 	margin: 0 !important;
+	overflow: hidden;
 }
 
 /* ===== Two-column split wrapper ===== */
 .st-login-wrapper {
 	display: flex !important;
 	flex-direction: row !important;
-	min-height: 100vh;
-	width: 100vw;
+	height: 100vh;
+	width: 100%;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 
-/* ===== Left column — form ===== */
-.st-login-form-col {
-	flex: 1 1 50%;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 48px 80px;
-	background: #fff;
-	overflow-y: auto;
-}
-
-/* ===== Right panel ===== */
+/* ===== Left panel (brand) ===== */
 .st-login-panel {
 	flex: 1 1 50%;
-	min-height: 100vh;
+	height: 100vh;
 	background: linear-gradient(160deg, #EDF2FB 0%, #D6E4F7 40%, #C5D8F0 100%);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 60px 48px;
+	padding: 40px 48px;
 	position: relative;
 	overflow: hidden;
 }
 
-/* Decorative floating bars */
-.st-login-panel::before,
-.st-login-panel::after {
-	content: "";
+/* Decorative floating bars (the three .st-float-bar divs in the HTML) */
+.st-float-bar {
 	position: absolute;
-	width: 6px;
+	width: 5px;
 	border-radius: 100px;
 	background: rgba(255, 255, 255, 0.5);
 }
 
-.st-login-panel::before {
-	height: 120px;
-	top: 20%;
-	right: 15%;
+.st-float-bar:nth-child(1) {
+	height: 100px;
+	top: 12%;
+	right: 12%;
 	transform: rotate(15deg);
 }
 
-.st-login-panel::after {
-	height: 80px;
-	bottom: 25%;
-	right: 25%;
+.st-float-bar:nth-child(2) {
+	height: 60px;
+	top: 40%;
+	left: 10%;
+	transform: rotate(15deg);
+}
+
+.st-float-bar:nth-child(3) {
+	height: 90px;
+	bottom: 12%;
+	right: 22%;
 	transform: rotate(15deg);
 }
 
@@ -102,27 +117,13 @@ body[data-path="login"] .page-content-wrapper {
 	position: relative;
 	z-index: 1;
 	text-align: center;
-	max-width: 520px;
+	max-width: 460px;
 }
 
-.st-panel-icon {
-	width: 120px;
-	height: 120px;
-	margin: 0 auto 32px;
-	background: linear-gradient(135deg, #B8D4F0 0%, #8BB8E8 100%);
-	border-radius: 24px;
+.st-panel-logo {
+	margin-bottom: 28px;
 	display: flex;
-	align-items: center;
 	justify-content: center;
-	box-shadow: 0 8px 32px rgba(0, 82, 255, 0.12);
-	transform: rotate(-5deg);
-}
-
-.st-panel-icon svg {
-	width: 48px;
-	height: 48px;
-	color: #fff;
-	transform: rotate(5deg);
 }
 
 .st-panel-content h2 {
@@ -140,61 +141,96 @@ body[data-path="login"] .page-content-wrapper {
 	margin-bottom: 0;
 }
 
-/* Extra floating bar decoration */
-.st-float-bar {
-	position: absolute;
-	width: 5px;
-	border-radius: 100px;
-	background: rgba(255, 255, 255, 0.4);
+/* ===== Module grid (ERP / CRM / HRMS / Helpdesk) ===== */
+.st-module-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 12px;
+	margin-top: 28px;
 }
 
-.st-float-bar:nth-child(2) {
-	height: 60px;
-	top: 35%;
-	left: 12%;
-	transform: rotate(15deg);
+.st-module-card {
+	background: rgba(255, 255, 255, 0.55);
+	border-radius: 14px;
+	padding: 14px 6px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	font-size: 11px;
+	font-weight: 600;
+	color: #0A2540;
 }
 
-.st-float-bar:nth-child(3) {
-	height: 100px;
-	bottom: 15%;
-	left: 20%;
-	transform: rotate(15deg);
-}
-
-.st-float-bar:nth-child(4) {
+.st-module-icon {
+	width: 40px;
 	height: 40px;
-	top: 55%;
-	right: 10%;
-	transform: rotate(15deg);
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	box-shadow: 0 4px 10px rgba(0, 82, 255, 0.15);
 }
 
-/* ===== Logo ===== */
-.st-login-form-col .page-card-head {
-	padding: 0 0 8px;
+.st-module-icon svg { width: 20px; height: 20px; }
+
+.st-module-icon.erp  { background: linear-gradient(135deg, #3b82f6, #0052FF); }
+.st-module-icon.crm  { background: linear-gradient(135deg, #a78bfa, #7C3AED); }
+.st-module-icon.hrms { background: linear-gradient(135deg, #34d399, #059669); }
+.st-module-icon.hd   { background: linear-gradient(135deg, #fb923c, #EA580C); }
+
+.st-panel-copyright {
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	right: 0;
 	text-align: center;
-	width: 100%;
-	max-width: 520px !important;
+	font-size: 12px;
+	color: #5A6B7F;
 }
 
-.st-login-form-col .page-card-head img.app-logo {
+/* ===== Right column — form ===== */
+.st-login-form-col {
+	flex: 1 1 50%;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 32px 80px;
+	background: #fff;
+	overflow-y: auto;
+}
+
+.st-form-inner {
+	width: 100%;
+	max-width: 440px;
+}
+
+/* ===== Logo / heading ===== */
+.st-form-head {
+	text-align: center;
+	margin-bottom: 24px;
+}
+
+.st-app-logo {
 	max-height: 42px;
 }
 
-.st-login-form-col .page-card-head h4 {
-	font-size: 26px;
+.st-form-title {
+	font-size: 24px;
 	font-weight: 700;
 	color: #0A2540;
 	letter-spacing: -0.02em;
-	margin-top: 24px;
-	margin-bottom: 4px;
+	margin-top: 20px;
+	margin-bottom: 0;
 }
 
 /* ===== Card — flat, no border ===== */
 .st-login-form-col .page-card {
 	max-width: 100% !important;
 	width: 100% !important;
-	padding: 20px 0 0;
+	padding: 12px 0 0;
 	border-radius: 0;
 	border: none;
 	background: transparent;
@@ -207,18 +243,42 @@ body[data-path="login"] .page-content-wrapper {
 	width: 100% !important;
 }
 
-.st-login-form-col .page-card .page-card-body {
-	max-width: 100% !important;
-}
-
 .st-login-form-col .form-control {
 	width: 100% !important;
 }
 
+/* ===== Field wrapper + icon + toggle ===== */
+.st-field-wrap {
+	position: relative;
+}
+
+.st-field-icon {
+	position: absolute;
+	left: 14px;
+	top: 16px;
+	color: #8792A2;
+	pointer-events: none;
+}
+
+.st-toggle-password {
+	position: absolute;
+	right: 14px;
+	top: 15px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #8792A2;
+	cursor: pointer;
+}
+
+.st-toggle-password:hover {
+	color: #0052FF;
+}
+
 /* ===== Inputs ===== */
-.st-login-form-col .page-card-body input[type="text"],
-.st-login-form-col .page-card-body input[type="email"],
-.st-login-form-col .page-card-body input[type="password"] {
+.st-login-form-col .st-input,
+.st-login-form-col input[type="text"],
+.st-login-form-col input[type="email"],
+.st-login-form-col input[type="password"] {
 	border: 1px solid #E3E8EE !important;
 	border-radius: 10px !important;
 	background: #fff !important;
@@ -229,7 +289,7 @@ body[data-path="login"] .page-content-wrapper {
 	margin-bottom: 14px !important;
 }
 
-.st-login-form-col .page-card-body input:focus {
+.st-login-form-col input:focus {
 	border-color: #0052FF !important;
 	box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.1) !important;
 	outline: none !important;
@@ -243,44 +303,25 @@ body[data-path="login"] .page-content-wrapper {
 	box-shadow: 0 0 0 3px rgba(224, 54, 54, 0.1) !important;
 }
 
-/* ===== Field icons ===== */
-.st-login-form-col .field-icon {
-	left: 14px !important;
-	fill: #8792A2 !important;
-}
-
-.st-login-form-col .toggle-password {
-	right: 14px !important;
-	top: 14px !important;
-	font-size: 12px !important;
-	color: #8792A2 !important;
-	font-weight: 500 !important;
-}
-
-.st-login-form-col .toggle-password:hover {
-	color: #0052FF !important;
-}
-
 /* ===== Forgot password ===== */
-.st-login-form-col .forgot-password-message {
-	margin-top: -6px !important;
-	margin-bottom: 6px !important;
+.st-forgot {
+	margin: -6px 0 6px !important;
+	text-align: right;
 }
 
-.st-login-form-col .forgot-password-message a {
+.st-forgot a {
 	color: #697386 !important;
 	font-size: 13px !important;
 	text-decoration: none !important;
 }
 
-.st-login-form-col .forgot-password-message a:hover {
+.st-forgot a:hover {
 	color: #0052FF !important;
 }
 
 /* ===== All primary buttons ===== */
 .st-login-form-col .btn-primary,
-.st-login-form-col .btn-login,
-.st-login-form-col .btn-forgot,
+.st-login-form-col .st-btn-login,
 .st-login-form-col .btn-login-with-email-link {
 	height: 48px !important;
 	border-radius: 10px !important;
@@ -291,11 +332,11 @@ body[data-path="login"] .page-content-wrapper {
 	color: #fff !important;
 	box-shadow: none !important;
 	transition: all 0.15s ease !important;
+	margin-top: 6px;
 }
 
 .st-login-form-col .btn-primary:hover,
-.st-login-form-col .btn-login:hover,
-.st-login-form-col .btn-forgot:hover,
+.st-login-form-col .st-btn-login:hover,
 .st-login-form-col .btn-login-with-email-link:hover {
 	background: #0047DB !important;
 	box-shadow: 0 4px 12px rgba(0, 82, 255, 0.25) !important;
@@ -303,8 +344,7 @@ body[data-path="login"] .page-content-wrapper {
 }
 
 .st-login-form-col .btn-primary:active,
-.st-login-form-col .btn-login:active,
-.st-login-form-col .btn-forgot:active,
+.st-login-form-col .st-btn-login:active,
 .st-login-form-col .btn-login-with-email-link:active {
 	transform: translateY(0);
 }
@@ -322,6 +362,7 @@ body[data-path="login"] .page-content-wrapper {
 	font-size: 13px !important;
 	position: relative;
 	margin: 22px 0 !important;
+	text-align: center;
 }
 
 .st-login-form-col .login-divider::before,
@@ -371,10 +412,19 @@ body[data-path="login"] .page-content-wrapper {
 	text-decoration: underline !important;
 }
 
-/* ===== Mobile — hide right panel, full width form ===== */
+/* ===== Mobile — hide left panel, full width form ===== */
 @media (max-width: 768px) {
 	.st-login-wrapper {
 		flex-direction: column !important;
+		height: auto;
+		min-height: 100vh;
+		overflow: visible;
+	}
+
+	body[data-path="login"],
+	body[data-path="login"] html {
+		overflow-y: auto !important;
+		height: auto;
 	}
 
 	.st-login-panel {
@@ -384,12 +434,13 @@ body[data-path="login"] .page-content-wrapper {
 	.st-login-form-col {
 		flex: 1 1 100%;
 		width: 100%;
+		height: auto;
 		min-height: 100vh;
 		padding: 32px 24px;
 		background: linear-gradient(180deg, #F0F4FA 0%, #fff 30%);
 	}
 
-	.st-login-form-col .page-card {
+	.st-form-inner {
 		max-width: 100%;
 	}
 }
@@ -403,19 +454,20 @@ body[data-path="login"] .page-content-wrapper {
 	background: #0d1117;
 }
 
-[data-theme="dark"] .st-login-form-col .page-card-head h4 {
+[data-theme="dark"] .st-form-title {
 	color: #e6edf3;
 }
 
-[data-theme="dark"] .st-login-form-col .page-card-body input[type="text"],
-[data-theme="dark"] .st-login-form-col .page-card-body input[type="email"],
-[data-theme="dark"] .st-login-form-col .page-card-body input[type="password"] {
+[data-theme="dark"] .st-login-form-col .st-input,
+[data-theme="dark"] .st-login-form-col input[type="text"],
+[data-theme="dark"] .st-login-form-col input[type="email"],
+[data-theme="dark"] .st-login-form-col input[type="password"] {
 	background: #161b22 !important;
 	border-color: #30363d !important;
 	color: #e6edf3 !important;
 }
 
-[data-theme="dark"] .st-login-form-col .page-card-body input:focus {
+[data-theme="dark"] .st-login-form-col input:focus {
 	border-color: #0052FF !important;
 	box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.2) !important;
 }
@@ -435,21 +487,21 @@ body[data-path="login"] .page-content-wrapper {
 	background: linear-gradient(160deg, #0d1117 0%, #141d2b 40%, #0d1930 100%);
 }
 
-[data-theme="dark"] .st-panel-icon {
-	background: linear-gradient(135deg, #1a3050 0%, #0d2040 100%);
-}
-
 [data-theme="dark"] .st-panel-content h2 {
 	color: #e6edf3;
 }
 
-[data-theme="dark"] .st-panel-content p {
+[data-theme="dark"] .st-panel-content p,
+[data-theme="dark"] .st-module-card,
+[data-theme="dark"] .st-panel-copyright {
 	color: #8b949e;
 }
 
-[data-theme="dark"] .st-float-bar,
-[data-theme="dark"] .st-login-panel::before,
-[data-theme="dark"] .st-login-panel::after {
+[data-theme="dark"] .st-module-card {
+	background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .st-float-bar {
 	background: rgba(255, 255, 255, 0.06);
 }
 
