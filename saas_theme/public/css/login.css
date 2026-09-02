@@ -1,7 +1,22 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap');
+
 /*
  * SaaS Theme — Login Page (Split Layout)
- * People360 — v29
+ * People360 — v30
  */
+
+/* ===== Font — Satoshi across the login page ===== */
+body[data-path="login"],
+body[data-path="login"] input,
+body[data-path="login"] button,
+body[data-path="login"] a,
+body[data-path="login"] p,
+body[data-path="login"] h2,
+body[data-path="login"] h4,
+body[data-path="login"] span,
+body[data-path="login"] label {
+        font-family: 'Satoshi', Helvetica, sans-serif !important;
+}
 
 /* ===== Hide navbar, footer, breadcrumbs ===== */
 body[data-path="login"] .web-header,
