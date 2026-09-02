@@ -223,6 +223,11 @@ body[data-path="login"] .page-content-wrapper {
         max-width: 100% !important;
 }
 
+/* Kill Frappe's default .form-group spacing — st-field-wrap handles it instead */
+.st-login-form-col .page-card-body .form-group {
+        margin-bottom: 0 !important;
+}
+
 /* ===== Field wrapper — icon perfectly centered ===== */
 .st-field-wrap {
         position: relative;
@@ -291,8 +296,8 @@ body[data-path="login"] .page-content-wrapper {
 
 /* ===== Forgot password — left aligned under field ===== */
 .st-forgot {
-        margin: 6px 0 12px !important;
-        text-align: left !important;
+        margin: 0 0 20px !important;
+        text-align: right !important;
 }
 .st-forgot a {
         color: #697386 !important;
