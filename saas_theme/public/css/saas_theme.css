@@ -1,3 +1,4 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap');
 /*
  * SaaS Theme — Fintech Theme (Blue)
  *
@@ -1076,7 +1077,7 @@ a:hover {
 	padding: 2px 6px;
 	border-radius: 3px;
 	line-height: 1.4;
-	font-family: inherit;
+	font-family: 'Satoshi', sans-serif;
 }
 
 /* ============================================
